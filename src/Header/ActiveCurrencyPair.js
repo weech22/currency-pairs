@@ -4,7 +4,11 @@ import styled from 'styled-components';
 const Wrap = styled.div``;
 
 const BaseCurrency = styled.span`
-  font-size: 24px;
+  font-size: ${({ activePair }) =>
+    (activePair.baseCurrency + activePair.counterCurrency).length >= 9
+      ? '22px'
+      : '24px'}
+
   color: #303a4f;
   line-height: 24px;
   letter-spacing: 2.4px;
@@ -12,7 +16,10 @@ const BaseCurrency = styled.span`
 `;
 
 const CounterCurrency = styled.span`
-  font-size: 16px;
+  font-size: ${({ activePair }) =>
+    (activePair.baseCurrency + activePair.counterCurrency).length >= 9
+      ? '16px'
+      : '14px'}
   color: #303a4f;
   line-height: 24px;
   letter-spacing: 1.6px;
@@ -20,7 +27,11 @@ const CounterCurrency = styled.span`
 
 export default ({ activePair }) => (
   <Wrap>
-    <BaseCurrency>{activePair.baseCurrency}</BaseCurrency>
-    <CounterCurrency>{`/${activePair.counterCurrency}`}</CounterCurrency>
+    <BaseCurrency activePair={activePair}>
+      {activePair.baseCurrency}
+    </BaseCurrency>
+    <CounterCurrency activePair={activePair}>
+      {`/${activePair.counterCurrency}`}
+    </CounterCurrency>
   </Wrap>
 );

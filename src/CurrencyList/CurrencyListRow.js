@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import FavoriteButton from './FavoriteButton';
 
 const TableRow = styled.tr`
   &:hover {
@@ -11,26 +12,13 @@ const TableRow = styled.tr`
   color: #303a4f;
 `;
 
-const Star = isFavorite => (
-  <svg
-    width="16"
-    height="15"
-    viewBox="0 0 16 15"
-    fill={isFavorite ? '#303a4f' : '#cdd9dd'}
-  >
-    <path
-      d="M2189.99,2283.71l-5.05,3.54,1.74,5.73-4.84-3.55-5.04,3.56,2.06-5.73-4.87-3.52h6.12l2.04-5.74,1.72,5.73Z"
-      transform="translate(-2174 -2278)"
-    />
-  </svg>
-);
-
 const MarketCell = styled.td`
   line-height: 3.13;
   letter-spacing: 0.2px;
   font-size: 12px;
   font-weight: 700;
   padding-left: 10px;
+  min-width: 80px;
 `;
 const NumberCell = styled.td`
   line-height: 3.13;
@@ -39,8 +27,10 @@ const NumberCell = styled.td`
   font-size: 12px;
   padding-left: 10px;
   font-family: 'Museo Sans Cyrl', sans-serif;
+  min-width: 80px;
 `;
 const ChangeCell = styled.td`
+  min-width: 80px;
   line-height: 3.36;
   font-weight: 500;
   letter-spacing: 0.2px;
@@ -50,16 +40,27 @@ const ChangeCell = styled.td`
 `;
 const StarCell = styled.td`
   text-align: right;
+  min-width: 35px;
 `;
 
 export default class extends Component {
   state = {};
 
   render() {
-    const { isFavorite, price, vol, change, market, index } = this.props;
+    const {
+      isFavorite,
+      price,
+      vol,
+      change,
+      market,
+      index,
+      onClick,
+    } = this.props;
     return (
-      <TableRow index={index}>
-        <StarCell>{Star(isFavorite)}</StarCell>
+      <TableRow index={index} onClick={() => onClick(market)}>
+        <StarCell>
+          <FavoriteButton isFavorite={isFavorite} />
+        </StarCell>
         <MarketCell>{market}</MarketCell>
         <NumberCell>{price.toFixed(4)}</NumberCell>
         <NumberCell>{vol.toFixed(4)}</NumberCell>

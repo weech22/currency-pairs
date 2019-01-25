@@ -6,6 +6,9 @@ const Wrap = styled.button`
   background-color: white;
   border: none;
   outline: none;
+  &:hover {
+    color: ${props => (props.isActive ? '#303a4f' : '#33b84c')};
+  }
   padding: 0 ${props => (props.isActive ? '5px' : '4px')};
   color: ${props => (props.isActive ? '#303a4f' : '#d5e0e4')};
   border-bottom: ${props =>

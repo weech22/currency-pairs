@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { CookiesProvider } from 'react-cookie';
 import CurrencyPairs from './CurrencyPairs';
 import './Fonts/font.css';
 
@@ -16,7 +17,9 @@ class App extends Component {
   render() {
     return (
       <Wrap>
-        <CurrencyPairs />
+        <CookiesProvider>
+          <CurrencyPairs />
+        </CookiesProvider>
       </Wrap>
     );
   }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { withCookies, Cookies } from 'react-cookie';
 import Header from './Header';
 
 import CurrencyList from './CurrencyList';
@@ -7,6 +8,7 @@ import CurrencyList from './CurrencyList';
 const Wrap = styled.div`
   background-color: white;
   border-radius: 5px;
+  box-shadow: 0px 20px 30px 0 rgba(83, 98, 104, 0.1);
 `;
 
 const Title = styled.h1`
@@ -24,7 +26,10 @@ const Body = styled.div`
   margin-top: 20px;
 `;
 
-export default class extends Component {
+//cookies.get('favorite')
+//cookies.set('favorite', favorite, { path: '/' });
+
+class CurrencyPairs extends Component {
   state = {
     data: [],
     activePair: {
@@ -32,11 +37,29 @@ export default class extends Component {
       counterCurrency: 'UAH',
     },
     popularCounterCurrencies: [],
-    selectedCounterCurrency: null,
+    showFavoriteOnly: false,
   };
 
-  onCounterCurrencyClick = selectedCounterCurrency => {
-    this.setState({ selectedCounterCurrency });
+  onCounterCurrencyClick = counterCurrency => {
+    this.setState(prevState => ({
+      activePair: {
+        ...prevState.activePair,
+        counterCurrency,
+      },
+    }));
+  };
+
+  toggleFavoriteOnly = showFavoriteOnly => {
+    this.setState({ showFavoriteOnly });
+  };
+
+  onListRowClick = baseCurrency => {
+    this.setState(prevState => ({
+      activePair: {
+        ...prevState.activePair,
+        baseCurrency,
+      },
+    }));
   };
 
   componentDidMount = () => {
@@ -59,18 +82,30 @@ export default class extends Component {
           .slice(0, 5)
           .map(currency => currency[0]);
 
-        this.setState({ data, popularCounterCurrencies });
+        const counterCurrency = popularCounterCurrencies[0];
+
+        this.setState(prevState => ({
+          activePair: {
+            ...prevState.activePair,
+            counterCurrency,
+          },
+          data,
+          popularCounterCurrencies,
+        }));
       });
 
-    // select first
+    // recieve favorites
   };
 
   render() {
     const {
       activePair,
       popularCounterCurrencies,
-      selectedCounterCurrency,
+      activePair: { counterCurrency },
+      showFavoriteOnly,
     } = this.state;
+
+    const { cookies } = this.props;
 
     return (
       <Wrap>
@@ -78,13 +113,21 @@ export default class extends Component {
         <Header
           activePair={activePair}
           counterCurrencyList={popularCounterCurrencies}
-          selectedCounterCurrency={selectedCounterCurrency}
+          counterCurrency={counterCurrency}
           onCounterCurrencyClick={this.onCounterCurrencyClick}
+          toggleFavoriteOnly={this.toggleFavoriteOnly}
+          showFavoriteOnly={showFavoriteOnly}
         />
         <Body>
-          <CurrencyList />
+          <CurrencyList
+            showFavoriteOnly={showFavoriteOnly}
+            counterCurrency={counterCurrency}
+            onListRowClick={this.onListRowClick}
+          />
         </Body>
       </Wrap>
     );
   }
 }
+
+export default withCookies(CurrencyPairs);

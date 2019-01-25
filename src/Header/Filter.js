@@ -4,7 +4,6 @@ import search from '../UI/search.png';
 import searchActive from '../UI/search_active.png';
 
 const Wrap = styled.div`
-  margin-left: 15px;
   margin-right: ${props => (props.isSearching ? '-16px' : '0')};
 `;
 

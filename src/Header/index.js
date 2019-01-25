@@ -13,7 +13,7 @@ const Upper = styled.div`
   border-bottom: 1px solid #d5e0e4;
   display: flex;
   padding-bottom: 14px;
-  align-items: center;
+  justify-content: space-between;
 `;
 const Lower = styled.div`
   display: flex;
@@ -29,8 +29,10 @@ export default class extends Component {
     const {
       activePair,
       counterCurrencyList,
-      selectedCounterCurrency,
+      counterCurrency,
       onCounterCurrencyClick,
+      toggleFavoriteOnly,
+      showFavoriteOnly,
     } = this.props;
     return (
       <Wrap>
@@ -39,10 +41,13 @@ export default class extends Component {
           <Filter />
         </Upper>
         <Lower>
-          <Favorites />
+          <Favorites
+            onClick={toggleFavoriteOnly}
+            showFavoriteOnly={showFavoriteOnly}
+          />
           <CounterCurrencyList
             currencies={counterCurrencyList}
-            selected={selectedCounterCurrency}
+            selected={counterCurrency}
             onClick={onCounterCurrencyClick}
           />
         </Lower>

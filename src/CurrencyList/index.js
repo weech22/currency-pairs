@@ -3,24 +3,22 @@ import styled from 'styled-components';
 import TableRow from './CurrencyListRow';
 import data from '../data';
 
-const Wrap = styled.div`
-  height: 400px;
-  overflow: overlay;
-`;
+const Wrap = styled.div``;
 
 const Table = styled.table`
   border-collapse: collapse;
-  width: 100%;
 `;
 
 const HeaderCell = styled.td`
   padding: 8px 0;
   padding-left: 10px;
+  min-width: 80px;
 `;
 
 const StarCell = styled.td`
   text-align: right;
   padding-left: 5px;
+  min-width: 30px;
 `;
 
 const Tr = styled.tr`
@@ -30,6 +28,14 @@ const Tr = styled.tr`
   font-size: 12px;
   line-height: 24px;
   letter-spacing: 0.6px;
+  display: block;
+  position: relative;
+`;
+
+const TBody = styled.tbody`
+  display: block;
+  overflow: overlay;
+  height: 298px;
 `;
 
 const Star = () => (
@@ -45,6 +51,7 @@ export default class extends Component {
   state = {};
 
   render() {
+    const { showFavoriteOnly, counterCurrency, onListRowClick } = this.props;
     return (
       <Wrap className="table">
         <Table>
@@ -59,19 +66,22 @@ export default class extends Component {
               <HeaderCell>+/-</HeaderCell>
             </Tr>
           </thead>
-          <tbody>
-            {data.map((x, i) => (
-              <TableRow
-                index={i}
-                key={x.vol}
-                isFavorite={false}
-                market={x.currency_codes[0]}
-                price={x.price}
-                vol={x.vol}
-                change={x.change}
-              />
-            ))}
-          </tbody>
+          <TBody>
+            {data
+              .filter(pair => pair.currency_codes[1] === counterCurrency)
+              .map((pair, i) => (
+                <TableRow
+                  index={i}
+                  key={pair.vol}
+                  isFavorite={false}
+                  market={pair.currency_codes[0]}
+                  price={pair.price}
+                  vol={pair.vol}
+                  change={pair.change}
+                  onClick={onListRowClick}
+                />
+              ))}
+          </TBody>
         </Table>
       </Wrap>
     );
