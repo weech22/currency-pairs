@@ -18,18 +18,12 @@ const Wrap = styled.button`
 `;
 
 export default class extends Component {
-  state = { isActive: false };
-
-  onClick = () => {
-    const { isActive } = this.state;
-    this.setState({ isActive: !isActive });
-  };
+  state = {};
 
   render() {
-    const { isActive } = this.state;
-    const { children } = this.props;
+    const { children, isActive, onClick } = this.props;
     return (
-      <Wrap isActive={isActive} onClick={this.onClick}>
+      <Wrap isActive={isActive} onClick={() => onClick(children)}>
         {children}
       </Wrap>
     );

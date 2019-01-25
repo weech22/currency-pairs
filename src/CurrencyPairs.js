@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Filter from './Filter';
-import Favorites from './Favorites';
-import CounterCurrencyList from './CounterCurrencyList';
-import ActiveCurrencyPair from './ActiveCurrencyPair';
+import Header from './Header';
+
 import CurrencyList from './CurrencyList';
 
 const Wrap = styled.div`
@@ -20,19 +18,7 @@ const Title = styled.h1`
   margin: 0;
   margin-bottom: 20px;
 `;
-const Header = styled.div`
-  padding: 0 20px;
-`;
-const Upper = styled.div`
-  border-bottom: 1px solid #d5e0e4;
-  display: flex;
-  padding-bottom: 14px;
-  align-items: center;
-`;
-const Lower = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
+
 const Body = styled.div``;
 
 export default class extends Component {
@@ -42,16 +28,7 @@ export default class extends Component {
     return (
       <Wrap>
         <Title>Currency Pairs</Title>
-        <Header>
-          <Upper>
-            <ActiveCurrencyPair />
-            <Filter />
-          </Upper>
-          <Lower>
-            <Favorites />
-            <CounterCurrencyList />
-          </Lower>
-        </Header>
+        <Header />
         <Body>
           <CurrencyList />
         </Body>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import search from './search.png';
+import search from '../UI/search.png';
 
 const Wrap = styled.div`
   margin-left: 15px;
