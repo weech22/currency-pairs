@@ -10,23 +10,17 @@ const Wrap = styled.div`
 `;
 
 export default class extends Component {
-  state = {
-    currencies: ['BTC', 'XNT', 'EUR', 'ERT', 'LTC'],
-    selectedCurrency: 'BTC',
-  };
-
-  onClick = selectedCurrency => {
-    this.setState({ selectedCurrency });
-  };
+  state = {};
 
   render() {
-    const { currencies, selectedCurrency } = this.state;
+    const { currencies, selected, onClick } = this.props;
     return (
       <Wrap>
         {currencies.map(currency => (
           <Button
-            isActive={selectedCurrency === currency}
-            onClick={this.onClick}
+            key={currency}
+            isActive={selected === currency}
+            onClick={onClick}
           >
             {currency}
           </Button>

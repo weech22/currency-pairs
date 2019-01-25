@@ -4,7 +4,6 @@ import TableRow from './CurrencyListRow';
 import data from '../data';
 
 const Wrap = styled.div`
-  margin-top: 20px;
   height: 400px;
   overflow: overlay;
 `;
@@ -49,27 +48,30 @@ export default class extends Component {
     return (
       <Wrap className="table">
         <Table>
-          <Tr>
-            <StarCell>
-              <Star />
-            </StarCell>
-            <HeaderCell>Market</HeaderCell>
-            <HeaderCell>Price</HeaderCell>
-            <HeaderCell>Vol</HeaderCell>
-            <HeaderCell>+/-</HeaderCell>
-          </Tr>
-
-          {data.map((x, i) => (
-            <TableRow
-              index={i}
-              key={x.vol}
-              isFavorite={true}
-              market={x.currency_codes[0]}
-              price={x.price}
-              vol={x.vol}
-              change={x.change}
-            />
-          ))}
+          <thead>
+            <Tr>
+              <StarCell>
+                <Star />
+              </StarCell>
+              <HeaderCell>Market</HeaderCell>
+              <HeaderCell>Price</HeaderCell>
+              <HeaderCell>Vol</HeaderCell>
+              <HeaderCell>+/-</HeaderCell>
+            </Tr>
+          </thead>
+          <tbody>
+            {data.map((x, i) => (
+              <TableRow
+                index={i}
+                key={x.vol}
+                isFavorite={false}
+                market={x.currency_codes[0]}
+                price={x.price}
+                vol={x.vol}
+                change={x.change}
+              />
+            ))}
+          </tbody>
         </Table>
       </Wrap>
     );

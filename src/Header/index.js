@@ -26,15 +26,25 @@ export default class extends Component {
   onChange = () => {};
 
   render() {
+    const {
+      activePair,
+      counterCurrencyList,
+      selectedCounterCurrency,
+      onCounterCurrencyClick,
+    } = this.props;
     return (
       <Wrap>
         <Upper>
-          <ActiveCurrencyPair />
+          <ActiveCurrencyPair activePair={activePair} />
           <Filter />
         </Upper>
         <Lower>
           <Favorites />
-          <CounterCurrencyList />
+          <CounterCurrencyList
+            currencies={counterCurrencyList}
+            selected={selectedCounterCurrency}
+            onClick={onCounterCurrencyClick}
+          />
         </Lower>
       </Wrap>
     );
