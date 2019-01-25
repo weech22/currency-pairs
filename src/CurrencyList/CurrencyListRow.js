@@ -38,6 +38,7 @@ const NumberCell = styled.td`
   font-weight: 500;
   font-size: 12px;
   padding-left: 10px;
+  font-family: 'Museo Sans Cyrl', sans-serif;
 `;
 const ChangeCell = styled.td`
   line-height: 3.36;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import CurrencyPairs from './CurrencyPairs';
+import './Fonts/font.css';
 
 const Wrap = styled.div`
   background: #f0f5f7;
