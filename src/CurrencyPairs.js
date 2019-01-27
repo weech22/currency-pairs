@@ -113,6 +113,7 @@ class CurrencyPairs extends Component {
       <Wrap>
         <Title>Currency Pairs</Title>
         <Header
+          data={data}
           activePair={activePair}
           counterCurrencyList={popularCounterCurrencies}
           counterCurrency={selectedCounterCurrency}

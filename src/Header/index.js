@@ -27,6 +27,7 @@ export default class extends Component {
 
   render() {
     const {
+      data,
       activePair,
       counterCurrencyList,
       counterCurrency,
@@ -34,11 +35,12 @@ export default class extends Component {
       toggleFavoriteOnly,
       showFavoriteOnly,
     } = this.props;
+
     return (
       <Wrap>
         <Upper>
           <ActiveCurrencyPair activePair={activePair} />
-          <Filter />
+          <Filter data={data} />
         </Upper>
         <Lower>
           <Favorites
