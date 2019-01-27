@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled, { keyframes } from 'styled-components';
+import Dropdown from './Dropdown';
 import search from '../UI/search.png';
 import searchActive from '../UI/search_active.png';
 
@@ -12,19 +13,25 @@ const Filter = styled.input`
   outline: none;
   border-radius: 5px;
   padding: 0 30px 0 19px;
-  background: ${props =>
-    props.isOnFocus
-      ? props.isSearching
-        ? '#e2eaed'
-        : `#e2eaed url(${searchActive}) no-repeat 95% center`
-      : `#f0f5f7 url(${search}) no-repeat 95% center`}; 
-     
+
+  background: 
+  
+  ${props => {
+    if (props.isOnFocus) {
+      if (props.isSearching) {
+        return '#e2eaed';
+      }
+      return `#e2eaed url(${searchActive}) no-repeat 95% center`;
+    }
+    return `#f0f5f7 url(${search}) no-repeat 95% center`;
+  }}
+
   font-size: 14px;
   font-weight: 300;
   line-height: 2.86;
   text-align: left;
   color: #303a4f
-}
+
   &::placeholder {
     opacity: 0.5;
     font-size: 10px;
@@ -68,11 +75,15 @@ const Preloader = styled.div`
 `;
 
 export default class extends Component {
-  state = { isOnFocus: false, isSearching: false, value: '' };
+  state = {
+    isOnFocus: false,
+    isSearching: false,
+    value: '',
+    isDropdownShown: true,
+  };
 
   onChange = e => {
     this.setState({ value: e.target.value, isSearching: true });
-
     // search
   };
 
@@ -85,7 +96,7 @@ export default class extends Component {
   };
 
   render() {
-    const { isOnFocus, isSearching, value } = this.state;
+    const { isOnFocus, isSearching, value, isDropdownShown } = this.state;
     return (
       <Wrap isSearching={isSearching}>
         <Filter
@@ -98,6 +109,7 @@ export default class extends Component {
           value={value}
         />
         {isSearching && <Preloader />}
+        {isDropdownShown && <Dropdown />}
       </Wrap>
     );
   }

@@ -32,7 +32,7 @@ export default class extends Component {
   };
 
   render() {
-    const { isFavorite } = this.props;
-    return <Wrap>{Star(isFavorite)}</Wrap>;
+    const { isFavorite, onClick } = this.props;
+    return <Wrap onClick={onClick}>{Star(isFavorite)}</Wrap>;
   }
 }

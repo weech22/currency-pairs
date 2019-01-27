@@ -19,7 +19,6 @@ const Caption = styled.span`
 
 const Star = styled.img`
   margin-right: 9px;
-  cursor: pointer;
 `;
 
 export default class extends Component {
@@ -32,9 +31,9 @@ export default class extends Component {
   render() {
     const { onClick, showFavoriteOnly } = this.props;
     return (
-      <Wrap onClick={() => onClick(!showFavoriteOnly)}>
+      <Wrap>
         <Star src={`${star}`} />
-        <Caption>Favorites</Caption>
+        <Caption onClick={() => onClick(!showFavoriteOnly)}>Favorites</Caption>
       </Wrap>
     );
   }

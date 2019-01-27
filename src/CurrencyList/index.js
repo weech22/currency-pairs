@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import TableRow from './CurrencyListRow';
-import data from '../data';
 
 const Wrap = styled.div``;
 
@@ -47,11 +46,35 @@ const Star = () => (
   </svg>
 );
 
+const isFavorite = (favorite, pairInfo) => {
+  const baseCurrency = pairInfo.currency_codes[0];
+  const counterCurrency = pairInfo.currency_codes[1];
+
+  const pair = `${baseCurrency}|${counterCurrency}`;
+
+  if (favorite.indexOf(pair) >= 0) {
+    return true;
+  }
+  return false;
+};
+
 export default class extends Component {
   state = {};
 
   render() {
-    const { showFavoriteOnly, counterCurrency, onListRowClick } = this.props;
+    const {
+      showFavoriteOnly,
+      favoriteHandler,
+      counterCurrency,
+      onListRowClick,
+      data,
+      favorite,
+    } = this.props;
+
+    const currencyList = showFavoriteOnly
+      ? data.filter(pair => isFavorite(favorite, pair))
+      : data;
+
     return (
       <Wrap className="table">
         <Table>
@@ -67,18 +90,19 @@ export default class extends Component {
             </Tr>
           </thead>
           <TBody>
-            {data
+            {currencyList
               .filter(pair => pair.currency_codes[1] === counterCurrency)
               .map((pair, i) => (
                 <TableRow
                   index={i}
                   key={pair.vol}
-                  isFavorite={false}
-                  market={pair.currency_codes[0]}
-                  price={pair.price}
-                  vol={pair.vol}
-                  change={pair.change}
+                  baseCurrency={pair.currency_codes[0]}
+                  isFavorite={isFavorite(favorite, pair)}
+                  pair={pair}
                   onClick={onListRowClick}
+                  counterCurrency={counterCurrency}
+                  favoriteHandler={favoriteHandler}
+                  favorite={favorite}
                 />
               ))}
           </TBody>

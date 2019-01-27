@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { withCookies } from 'react-cookie';
 import FavoriteButton from './FavoriteButton';
 
 const TableRow = styled.tr`
@@ -43,25 +44,56 @@ const StarCell = styled.td`
   min-width: 35px;
 `;
 
-export default class extends Component {
+function immutableDelete(arr, index) {
+  return arr.slice(0, index).concat(arr.slice(index + 1));
+}
+
+const immutablePush = (arr, newEntry) => {
+  return [].concat(arr, newEntry);
+};
+
+class CurrencyListRow extends Component {
   state = {};
+
+  favoriteHandler = () => {
+    const {
+      favoriteHandler,
+      favorite,
+      cookies,
+      baseCurrency,
+      counterCurrency,
+      isFavorite,
+    } = this.props;
+
+    const newPair = `${baseCurrency}|${counterCurrency}`;
+
+    const newFavorite = isFavorite
+      ? immutableDelete(favorite, favorite.indexOf(newPair))
+      : immutablePush(favorite, newPair);
+
+    cookies.set('favorite', newFavorite, { path: '/' });
+
+    favoriteHandler();
+  };
 
   render() {
     const {
-      isFavorite,
-      price,
-      vol,
-      change,
-      market,
+      baseCurrency,
       index,
       onClick,
+      isFavorite,
+      pair: { price, vol, change },
     } = this.props;
+
     return (
-      <TableRow index={index} onClick={() => onClick(market)}>
+      <TableRow index={index} onClick={() => onClick(baseCurrency)}>
         <StarCell>
-          <FavoriteButton isFavorite={isFavorite} />
+          <FavoriteButton
+            isFavorite={isFavorite}
+            onClick={this.favoriteHandler}
+          />
         </StarCell>
-        <MarketCell>{market}</MarketCell>
+        <MarketCell>{baseCurrency}</MarketCell>
         <NumberCell>{price.toFixed(4)}</NumberCell>
         <NumberCell>{vol.toFixed(4)}</NumberCell>
         <ChangeCell change={change}>{`${Math.abs(change)}%`}</ChangeCell>
@@ -69,3 +101,5 @@ export default class extends Component {
     );
   }
 }
+
+export default withCookies(CurrencyListRow);

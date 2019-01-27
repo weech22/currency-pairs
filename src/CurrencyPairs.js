@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { withCookies, Cookies } from 'react-cookie';
+import { withCookies } from 'react-cookie';
 import Header from './Header';
 
 import CurrencyList from './CurrencyList';
@@ -26,43 +26,50 @@ const Body = styled.div`
   margin-top: 20px;
 `;
 
-//cookies.get('favorite')
-//cookies.set('favorite', favorite, { path: '/' });
-
 class CurrencyPairs extends Component {
   state = {
     data: [],
     activePair: {
+      // TODO: select first instead
       baseCurrency: 'RUB',
       counterCurrency: 'UAH',
     },
     popularCounterCurrencies: [],
     showFavoriteOnly: false,
+    selectedCounterCurrency: null,
+    favorite: [],
   };
 
-  onCounterCurrencyClick = counterCurrency => {
-    this.setState(prevState => ({
-      activePair: {
-        ...prevState.activePair,
-        counterCurrency,
-      },
-    }));
+  onCounterCurrencyClick = selectedCounterCurrency => {
+    this.setState({ selectedCounterCurrency });
   };
 
   toggleFavoriteOnly = showFavoriteOnly => {
     this.setState({ showFavoriteOnly });
   };
 
+  favoriteHandler = () => {
+    const { cookies } = this.props;
+    const favorite = cookies.get('favorite');
+
+    this.setState({ favorite });
+  };
+
   onListRowClick = baseCurrency => {
-    this.setState(prevState => ({
+    const { selectedCounterCurrency: counterCurrency } = this.state;
+    this.setState({
       activePair: {
-        ...prevState.activePair,
         baseCurrency,
+        counterCurrency,
       },
-    }));
+    });
   };
 
   componentDidMount = () => {
+    const { cookies } = this.props;
+    const favorite = cookies.get('favorite');
+    this.setState({ favorite });
+
     const url = 'http://api.mrthefirst.pro/pairs-list/';
     fetch(url)
       .then(response => response.json())
@@ -82,30 +89,25 @@ class CurrencyPairs extends Component {
           .slice(0, 5)
           .map(currency => currency[0]);
 
-        const counterCurrency = popularCounterCurrencies[0];
+        const selectedCounterCurrency = popularCounterCurrencies[0];
 
-        this.setState(prevState => ({
-          activePair: {
-            ...prevState.activePair,
-            counterCurrency,
-          },
+        this.setState({
           data,
           popularCounterCurrencies,
-        }));
+          selectedCounterCurrency,
+        });
       });
-
-    // recieve favorites
   };
 
   render() {
     const {
       activePair,
+      selectedCounterCurrency,
       popularCounterCurrencies,
-      activePair: { counterCurrency },
       showFavoriteOnly,
+      data,
+      favorite,
     } = this.state;
-
-    const { cookies } = this.props;
 
     return (
       <Wrap>
@@ -113,16 +115,19 @@ class CurrencyPairs extends Component {
         <Header
           activePair={activePair}
           counterCurrencyList={popularCounterCurrencies}
-          counterCurrency={counterCurrency}
+          counterCurrency={selectedCounterCurrency}
           onCounterCurrencyClick={this.onCounterCurrencyClick}
           toggleFavoriteOnly={this.toggleFavoriteOnly}
           showFavoriteOnly={showFavoriteOnly}
         />
         <Body>
           <CurrencyList
+            data={data}
             showFavoriteOnly={showFavoriteOnly}
-            counterCurrency={counterCurrency}
+            counterCurrency={selectedCounterCurrency}
             onListRowClick={this.onListRowClick}
+            favoriteHandler={this.favoriteHandler}
+            favorite={favorite}
           />
         </Body>
       </Wrap>
