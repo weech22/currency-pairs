@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import enhanceWithClickOutside from 'react-click-outside';
 import Dropdown from './Dropdown';
+import { Preloader } from '../../UI/styles';
 import searchIcon from '../../UI/search.png';
 import searchIconActive from '../../UI/search_active.png';
 
@@ -15,6 +16,7 @@ const Wrap = styled.div`
 const Searchbar = styled.input`
   border: none;
   outline: none;
+  flex-shrink: 1;
   border-radius: 5px;
   padding: 13px 30px 13px 19px;
   text-transform: uppercase;
@@ -49,37 +51,6 @@ const Searchbar = styled.input`
   }
 `;
 
-const rotate = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`;
-
-const Preloader = styled.div`
-  display: inline-block;
-  position: absolute;
-  top: 14px;
-  right: 20px;
-  width: 16px;
-  height: 16px;
-  background-image: conic-gradient(#303a4f, #e2eaed, #303a4f);
-  border-radius: 50%;
-  &:after {
-    content: '';
-    width: 12px;
-    height: 12px;
-    background-color: #e2eaed;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    border-radius: 50%;
-  }
-  animation: ${rotate} 2s linear infinite;
-`;
-
 const search = (data, term) =>
   data
     .map(pair => `${pair.currency_codes[0]}/${pair.currency_codes[1]}`)
@@ -92,6 +63,7 @@ class Filter extends Component {
     value: '',
     isDropdownShown: false,
     data: [],
+    selectedPair: null,
   };
 
   onChange = e => {
@@ -109,6 +81,10 @@ class Filter extends Component {
   };
 
   onFocus = () => {
+    const { selectedPair } = this.state;
+    if (selectedPair) {
+      this.setState({ value: '' });
+    }
     this.setState({ isOnFocus: true });
   };
 
@@ -122,6 +98,10 @@ class Filter extends Component {
 
   handleClickOutside = () => {
     this.loseFocus();
+  };
+
+  setActivePair = selectedPair => {
+    this.setState({ selectedPair, value: selectedPair });
   };
 
   render() {
@@ -148,6 +128,7 @@ class Filter extends Component {
             isSearching={isSearching}
             onClick={onResultClick}
             focusHandler={this.loseFocus}
+            setActivePair={this.setActivePair}
           />
         )}
       </Wrap>

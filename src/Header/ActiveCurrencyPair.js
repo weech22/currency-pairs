@@ -9,7 +9,7 @@ const Wrap = styled.div`
 const BaseCurrency = styled.span`
 font-family: 'Museo Sans', 'sans-serif';
   font-size: ${({ activePair }) =>
-    (activePair.baseCurrency + activePair.counterCurrency).length >= 9
+    (activePair.baseCurrency + activePair.counterCurrency).length >= 7
       ? '22px'
       : '24px'}
 
@@ -22,7 +22,7 @@ font-family: 'Museo Sans', 'sans-serif';
 const CounterCurrency = styled.span`
 font-family: 'Museo Sans', 'sans-serif';
   font-size: ${({ activePair }) =>
-    (activePair.baseCurrency + activePair.counterCurrency).length >= 9
+    (activePair.baseCurrency + activePair.counterCurrency).length >= 7
       ? '14px'
       : '16px'}
   color: #303a4f;

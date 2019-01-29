@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { withCookies } from 'react-cookie';
 import FavoriteButton from './FavoriteButton';
+import { TableCell, StarCell } from '../UI/styles';
 
 const TableRow = styled.tr`
   display: flex;
@@ -16,45 +17,18 @@ const TableRow = styled.tr`
   }
 `;
 
-const MarketCell = styled.td`
-  padding: 2px 0;
-  font-family: 'Museo Sans', 'sans-serif';
-
-  font-size: 12px;
+const MarketCell = styled(TableCell)`
   font-weight: bold;
-  line-height: 3.13;
-  letter-spacing: 0.2px;
-  width: 23%;
 `;
 
-const NumberCell = styled.td`
-  font-family: 'Museo Sans', 'sans-serif';
-
+const NumberCell = styled(TableCell)`
   font-weight: 500;
-  font-size: 12px;
-  line-height: 3.13;
-  letter-spacing: 0.2px;
-  width: 23%;
-  padding: 2px 0;
 `;
 
-const ChangeCell = styled.td`
-  font-family: 'Museo Sans', 'sans-serif';
-
+const ChangeCell = styled(TableCell)`
   font-size: 11px;
   line-height: 3.36;
-  letter-spacing: 0.2px;
   color: ${props => (props.change > 0 ? '#33b84c' : '#ff4b67')};
-  width: 23%;
-  padding: 2px 0;
-`;
-
-const StarCell = styled.td`
-  padding: 2px 0;
-  padding-left: 2px;
-  padding-right: 10px;
-  text-align: right;
-  width: 8%;
 `;
 
 const immutableDelete = (arr, i) => arr.slice(0, i).concat(arr.slice(i + 1));

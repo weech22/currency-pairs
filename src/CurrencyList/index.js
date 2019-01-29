@@ -1,9 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import ScrollArea from 'react-scrollbar';
 import TableRow from './CurrencyListRow';
-import { Star } from '../UI/styles';
-import '../UI/scrollbar.css';
+import {
+  Star,
+  StarCell,
+  TableCell,
+  scrollbarStyles,
+  containerStyles,
+} from '../UI/styles';
 
 const Table = styled.table`
   width: 100%;
@@ -11,46 +16,25 @@ const Table = styled.table`
   border-collapse: collapse;
 `;
 
-const HeaderCell = styled.td`
-  font-family: 'Museo Sans', 'sans-serif';
+const HeaderCell = styled(TableCell)`
   font-weight: bold;
-  padding: 8px 0;
-  width: 23%;
-  text-align: left;
 `;
 
-const StarCell = styled.td`
-  text-align: right;
-  padding-right: 10px;
-  width: 8%;
-  padding-top: 6px;
+const StyledStarCell = styled(StarCell)`
+  padding: 6px 10px 0 0;
 `;
 
 const HeaderRow = styled.tr`
   display: flex;
   align-items: center;
-  font-size: 12px;
-  line-height: 24px;
   color: #303a4f;
+  line-height: 24px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
   background-color: #e2eaed;
 `;
 
-const scrollbarStyles = {
-  background: '#a3b4ba',
-  width: '5px',
-  borderRadius: '2.5px',
-};
-
-const containerStyles = {
-  opacity: 1,
-  background: 'transparent',
-};
-
-const TBody = styled.tbody``;
-
-const THead = styled.thead``;
+const TBody = styled(ScrollArea)``;
 
 const isFavorite = (favorite, pairInfo) => {
   const baseCurrency = pairInfo.currency_codes[0];
@@ -60,65 +44,50 @@ const isFavorite = (favorite, pairInfo) => {
   return favorite.indexOf(pair) >= 0;
 };
 
-export default class extends Component {
-  state = {};
-
-  render() {
-    const {
-      showFavoriteOnly,
-      favoriteHandler,
-      counterCurrency,
-      onListRowClick,
-      data,
-      favorite,
-    } = this.props;
-
-    const currencyList = showFavoriteOnly
-      ? data.filter(pair => isFavorite(favorite, pair))
-      : data;
-
-    return (
-      <Table>
-        <THead>
-          <HeaderRow>
-            <StarCell>
-              <div>
-                <Star isFavorite />
-              </div>
-            </StarCell>
-            <HeaderCell>Market</HeaderCell>
-            <HeaderCell>Price</HeaderCell>
-            <HeaderCell>Vol</HeaderCell>
-            <HeaderCell>+/-</HeaderCell>
-          </HeaderRow>
-        </THead>
-        <TBody>
-          <ScrollArea
-            speed={0.8}
-            className="list-area"
-            horizontal={false}
-            smoothScrolling
-            verticalScrollbarStyle={scrollbarStyles}
-            verticalContainerStyle={containerStyles}
-          >
-            {currencyList
-              .filter(pair => pair.currency_codes[1] === counterCurrency)
-              .map((pair, i) => (
-                <TableRow
-                  index={i}
-                  key={pair.vol}
-                  baseCurrency={pair.currency_codes[0]}
-                  isFavorite={isFavorite(favorite, pair)}
-                  pair={pair}
-                  onClick={onListRowClick}
-                  counterCurrency={counterCurrency}
-                  favoriteHandler={favoriteHandler}
-                  favorite={favorite}
-                />
-              ))}
-          </ScrollArea>
-        </TBody>
-      </Table>
-    );
-  }
-}
+export default ({
+  favoriteHandler,
+  counterCurrency,
+  onListRowClick,
+  currencyList,
+  favorite,
+}) => (
+  <Table>
+    <thead>
+      <HeaderRow>
+        <StyledStarCell>
+          <Star isFavorite />
+        </StyledStarCell>
+        <HeaderCell>Market</HeaderCell>
+        <HeaderCell>Price</HeaderCell>
+        <HeaderCell>Vol</HeaderCell>
+        <HeaderCell>+/-</HeaderCell>
+      </HeaderRow>
+    </thead>
+    <tbody>
+      <ScrollArea
+        speed={1}
+        className="list-area"
+        horizontal={false}
+        smoothScrolling
+        verticalScrollbarStyle={scrollbarStyles}
+        verticalContainerStyle={containerStyles}
+      >
+        {currencyList
+          .filter(pair => pair.currency_codes[1] === counterCurrency)
+          .map((pair, i) => (
+            <TableRow
+              index={i}
+              key={pair.vol}
+              baseCurrency={pair.currency_codes[0]}
+              isFavorite={isFavorite(favorite, pair)}
+              pair={pair}
+              onClick={onListRowClick}
+              counterCurrency={counterCurrency}
+              favoriteHandler={favoriteHandler}
+              favorite={favorite}
+            />
+          ))}
+      </ScrollArea>
+    </tbody>
+  </Table>
+);

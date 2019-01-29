@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { CookiesProvider } from 'react-cookie';
 import CurrencyPairs from './CurrencyPairs';
 import './Fonts/font.css';
+import './UI/scrollbar.css';
 
 const Wrap = styled.div`
   display: flex;

@@ -29,6 +29,14 @@ const Body = styled.div`
   margin-top: 20px;
 `;
 
+const isFavorite = (favorite, pairInfo) => {
+  const baseCurrency = pairInfo.currency_codes[0];
+  const counterCurrency = pairInfo.currency_codes[1];
+  const pair = `${baseCurrency}/${counterCurrency}`;
+
+  return favorite.indexOf(pair) >= 0;
+};
+
 class CurrencyPairs extends Component {
   state = {
     data: [],
@@ -77,7 +85,7 @@ class CurrencyPairs extends Component {
 
     this.setState({
       activePair: selectedPair,
-      selectedCounterCurrency: selectedPair[1],
+      selectedCounterCurrency: selectedPair.counterCurrency,
     });
   };
 
@@ -126,6 +134,10 @@ class CurrencyPairs extends Component {
       favorite,
     } = this.state;
 
+    const currencyList = showFavoriteOnly
+      ? data.filter(pair => isFavorite(favorite, pair))
+      : data;
+
     return (
       <Wrap>
         <Title>Currency Pairs</Title>
@@ -140,8 +152,7 @@ class CurrencyPairs extends Component {
         />
         <Body>
           <CurrencyList
-            data={data}
-            showFavoriteOnly={showFavoriteOnly}
+            currencyList={currencyList}
             counterCurrency={selectedCounterCurrency}
             onListRowClick={this.onListRowClick}
             favoriteHandler={this.favoriteHandler}
