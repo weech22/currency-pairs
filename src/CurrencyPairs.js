@@ -51,6 +51,10 @@ class CurrencyPairs extends Component {
     favorite: [],
   };
 
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   onCounterCurrencyClick = selectedCounterCurrency => {
     this.setState({ selectedCounterCurrency });
   };
@@ -93,13 +97,12 @@ class CurrencyPairs extends Component {
     const { cookies } = this.props;
     const favorite = cookies.get('favorite');
     this.setState({ favorite });
-
     const url = 'http://api.mrthefirst.pro/pairs-list/';
+
     fetch(url)
       .then(response => response.json())
       .then(data => {
         // Finding TOP5 popular counter currencies
-
         const popularCounterCurrencies = Object.entries(
           data.reduce((acc, pair) => {
             if (acc[pair.currency_codes[1]]) {
@@ -122,6 +125,14 @@ class CurrencyPairs extends Component {
           selectedCounterCurrency,
         });
       });
+
+    this.interval = setInterval(
+      () =>
+        fetch(url)
+          .then(response => response.json())
+          .then(data => this.setState({ data })),
+      10000
+    );
   };
 
   render() {
