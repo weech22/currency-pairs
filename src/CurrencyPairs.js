@@ -1,25 +1,28 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { withCookies } from 'react-cookie';
+import fetch from 'node-fetch';
 import Header from './Header';
-
 import CurrencyList from './CurrencyList';
 
 const Wrap = styled.div`
   background-color: white;
   border-radius: 5px;
   box-shadow: 0px 20px 30px 0 rgba(83, 98, 104, 0.1);
+  max-width: 449px;
 `;
 
 const Title = styled.h1`
+  font-family: 'Museo Sans', 'sans-serif';
   font-size: 14px;
+  font-weight: bold;
   color: #303a4f;
   letter-spacing: 1.4px;
   text-transform: uppercase;
   padding-left: 17px;
   padding-top: 29px;
   margin: 0;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 `;
 
 const Body = styled.div`
@@ -31,8 +34,8 @@ class CurrencyPairs extends Component {
     data: [],
     activePair: {
       // TODO: select first instead
-      baseCurrency: 'RUB',
-      counterCurrency: 'UAH',
+      baseCurrency: 'XNT',
+      counterCurrency: 'BTC',
     },
     popularCounterCurrencies: [],
     showFavoriteOnly: false,
@@ -57,11 +60,24 @@ class CurrencyPairs extends Component {
 
   onListRowClick = baseCurrency => {
     const { selectedCounterCurrency: counterCurrency } = this.state;
+
     this.setState({
       activePair: {
         baseCurrency,
         counterCurrency,
       },
+    });
+  };
+
+  onFilterResultClick = result => {
+    const selectedPair = {
+      baseCurrency: result.substring(0, result.indexOf('/')),
+      counterCurrency: result.substring(result.indexOf('/') + 1),
+    };
+
+    this.setState({
+      activePair: selectedPair,
+      selectedCounterCurrency: selectedPair[1],
     });
   };
 
@@ -75,6 +91,7 @@ class CurrencyPairs extends Component {
       .then(response => response.json())
       .then(data => {
         // Finding TOP5 popular counter currencies
+
         const popularCounterCurrencies = Object.entries(
           data.reduce((acc, pair) => {
             if (acc[pair.currency_codes[1]]) {
@@ -113,7 +130,7 @@ class CurrencyPairs extends Component {
       <Wrap>
         <Title>Currency Pairs</Title>
         <Header
-          data={data}
+          onFilterResultClick={this.onFilterResultClick}
           activePair={activePair}
           counterCurrencyList={popularCounterCurrencies}
           counterCurrency={selectedCounterCurrency}

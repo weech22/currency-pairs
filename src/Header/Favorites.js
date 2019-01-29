@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import star from '../UI/star.svg';
+import { Star } from '../UI/styles';
 
 const Wrap = styled.div`
   display: flex;
@@ -8,33 +8,19 @@ const Wrap = styled.div`
 `;
 
 const Caption = styled.span`
+  margin-left: 9px;
+  font-family: 'Museo Sans', 'sans-serif';
   font-size: 14px;
   line-height: 40px;
-  font-weight: 300;
   cursor: pointer;
   &:hover {
     color: #33b84c;
   }
 `;
 
-const Star = styled.img`
-  margin-right: 9px;
-`;
-
-export default class extends Component {
-  state = {};
-
-  onClick = () => {
-    // toggle list mode
-  };
-
-  render() {
-    const { onClick, showFavoriteOnly } = this.props;
-    return (
-      <Wrap>
-        <Star src={`${star}`} />
-        <Caption onClick={() => onClick(!showFavoriteOnly)}>Favorites</Caption>
-      </Wrap>
-    );
-  }
-}
+export default ({ onClick, showFavoriteOnly }) => (
+  <Wrap>
+    <Star isFavorite />
+    <Caption onClick={() => onClick(!showFavoriteOnly)}>Favorites</Caption>
+  </Wrap>
+);

@@ -1,61 +1,63 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import ScrollArea from 'react-scrollbar';
 import TableRow from './CurrencyListRow';
-
-const Wrap = styled.div``;
+import { Star } from '../UI/styles';
+import '../UI/scrollbar.css';
 
 const Table = styled.table`
+  width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
 `;
 
 const HeaderCell = styled.td`
+  font-family: 'Museo Sans', 'sans-serif';
+  font-weight: bold;
   padding: 8px 0;
-  padding-left: 10px;
-  min-width: 80px;
+  width: 23%;
+  text-align: left;
 `;
 
 const StarCell = styled.td`
   text-align: right;
-  padding-left: 5px;
-  min-width: 30px;
+  padding-right: 10px;
+  width: 8%;
+  padding-top: 6px;
 `;
 
-const Tr = styled.tr`
-  background-color: #e2eaed;
-  text-transform: uppercase;
-  color: #303a4f;
+const HeaderRow = styled.tr`
+  display: flex;
+  align-items: center;
   font-size: 12px;
   line-height: 24px;
+  color: #303a4f;
   letter-spacing: 0.6px;
-  display: block;
-  position: relative;
+  text-transform: uppercase;
+  background-color: #e2eaed;
 `;
 
-const TBody = styled.tbody`
-  display: block;
-  overflow: overlay;
-  height: 298px;
-`;
+const scrollbarStyles = {
+  background: '#a3b4ba',
+  width: '5px',
+  borderRadius: '2.5px',
+};
 
-const Star = () => (
-  <svg width="16" height="15" viewBox="0 0 16 15" fill="#303a4f">
-    <path
-      d="M2189.99,2283.71l-5.05,3.54,1.74,5.73-4.84-3.55-5.04,3.56,2.06-5.73-4.87-3.52h6.12l2.04-5.74,1.72,5.73Z"
-      transform="translate(-2174 -2278)"
-    />
-  </svg>
-);
+const containerStyles = {
+  opacity: 1,
+  background: 'transparent',
+};
+
+const TBody = styled.tbody``;
+
+const THead = styled.thead``;
 
 const isFavorite = (favorite, pairInfo) => {
   const baseCurrency = pairInfo.currency_codes[0];
   const counterCurrency = pairInfo.currency_codes[1];
+  const pair = `${baseCurrency}/${counterCurrency}`;
 
-  const pair = `${baseCurrency}|${counterCurrency}`;
-
-  if (favorite.indexOf(pair) >= 0) {
-    return true;
-  }
-  return false;
+  return favorite.indexOf(pair) >= 0;
 };
 
 export default class extends Component {
@@ -76,20 +78,29 @@ export default class extends Component {
       : data;
 
     return (
-      <Wrap className="table">
-        <Table>
-          <thead>
-            <Tr>
-              <StarCell>
-                <Star />
-              </StarCell>
-              <HeaderCell>Market</HeaderCell>
-              <HeaderCell>Price</HeaderCell>
-              <HeaderCell>Vol</HeaderCell>
-              <HeaderCell>+/-</HeaderCell>
-            </Tr>
-          </thead>
-          <TBody>
+      <Table>
+        <THead>
+          <HeaderRow>
+            <StarCell>
+              <div>
+                <Star isFavorite />
+              </div>
+            </StarCell>
+            <HeaderCell>Market</HeaderCell>
+            <HeaderCell>Price</HeaderCell>
+            <HeaderCell>Vol</HeaderCell>
+            <HeaderCell>+/-</HeaderCell>
+          </HeaderRow>
+        </THead>
+        <TBody>
+          <ScrollArea
+            speed={0.8}
+            className="list-area"
+            horizontal={false}
+            smoothScrolling
+            verticalScrollbarStyle={scrollbarStyles}
+            verticalContainerStyle={containerStyles}
+          >
             {currencyList
               .filter(pair => pair.currency_codes[1] === counterCurrency)
               .map((pair, i) => (
@@ -105,9 +116,9 @@ export default class extends Component {
                   favorite={favorite}
                 />
               ))}
-          </TBody>
-        </Table>
-      </Wrap>
+          </ScrollArea>
+        </TBody>
+      </Table>
     );
   }
 }

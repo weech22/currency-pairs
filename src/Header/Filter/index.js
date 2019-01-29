@@ -1,21 +1,25 @@
 import React, { Component } from 'react';
 import styled, { keyframes } from 'styled-components';
+import enhanceWithClickOutside from 'react-click-outside';
 import Dropdown from './Dropdown';
-import searchIcon from '../UI/search.png';
-import searchIconActive from '../UI/search_active.png';
+import searchIcon from '../../UI/search.png';
+import searchIconActive from '../../UI/search_active.png';
 
 const Wrap = styled.div`
-  margin-right: ${props => (props.isSearching ? '-16px' : '0')};
   position: relative;
+  flex-basis: 70%;
+  flex-shrink: 1;
+  display: flex;
 `;
 
-const Filter = styled.input`
+const Searchbar = styled.input`
   border: none;
   outline: none;
   border-radius: 5px;
-  padding: 0 30px 0 19px;
- text-transform: uppercase;
-
+  padding: 13px 30px 13px 19px;
+  text-transform: uppercase;
+  width: 100%;
+  box-sizing: border-box;
   background: 
   ${props => {
     if (props.isOnFocus) {
@@ -28,10 +32,9 @@ const Filter = styled.input`
   }}
 
   background-position: right 20px center;
-
+  font-family: 'Museo Sans', 'sans-serif';
   font-size: 14px;
   font-weight: 300;
-  line-height: 2.86;
   text-align: left;
   color: #303a4f
 
@@ -57,9 +60,9 @@ const rotate = keyframes`
 
 const Preloader = styled.div`
   display: inline-block;
-  position: relative;
-  right: 36px;
-  top: 3px;
+  position: absolute;
+  top: 14px;
+  right: 20px;
   width: 16px;
   height: 16px;
   background-image: conic-gradient(#303a4f, #e2eaed, #303a4f);
@@ -82,49 +85,74 @@ const search = (data, term) =>
     .map(pair => `${pair.currency_codes[0]}/${pair.currency_codes[1]}`)
     .filter(pair => pair.toLowerCase().search(term.toLowerCase()) !== -1);
 
-export default class extends Component {
+class Filter extends Component {
   state = {
     isOnFocus: false,
     isSearching: false,
     value: '',
     isDropdownShown: false,
+    data: [],
   };
 
   onChange = e => {
-    this.setState({ value: e.target.value, isSearching: true });
+    const url = 'http://api.mrthefirst.pro/pairs-list/';
+    this.setState({ isSearching: true, isDropdownShown: true });
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ data });
+      })
+      .then(() => {
+        this.setState({ isSearching: false });
+      });
+    this.setState({ value: e.target.value });
   };
 
   onFocus = () => {
-    this.setState({ isOnFocus: true, isDropdownShown: true });
+    this.setState({ isOnFocus: true });
   };
 
-  onBlur = () => {
-    this.setState({
-      isOnFocus: false,
-      isSearching: false,
-      isDropdownShown: false,
-    });
+  setSearchingStatus = isSearching => {
+    this.setState({ isSearching });
+  };
+
+  loseFocus = () => {
+    this.setState({ isOnFocus: false, isDropdownShown: false });
+  };
+
+  handleClickOutside = () => {
+    this.loseFocus();
   };
 
   render() {
-    const { isOnFocus, isSearching, isDropdownShown, value } = this.state;
-    const { data } = this.props;
+    const { isOnFocus, isSearching, isDropdownShown, value, data } = this.state;
+    const { onResultClick } = this.props;
     const results = search(data, value);
 
     return (
       <Wrap isSearching={isSearching}>
-        <Filter
+        <Searchbar
           isSearching={isSearching}
           isOnFocus={isOnFocus}
           placeholder={isOnFocus ? '' : 'SEARCH'}
-          onBlur={this.onBlur}
           onFocus={this.onFocus}
+          onBlur={this.onBlur}
           onChange={this.onChange}
           value={value}
         />
         {isSearching && <Preloader />}
-        {isDropdownShown && <Dropdown results={results} term={value} />}
+        {isDropdownShown && (
+          <Dropdown
+            results={results}
+            term={value}
+            isSearching={isSearching}
+            onClick={onResultClick}
+            focusHandler={this.loseFocus}
+          />
+        )}
       </Wrap>
     );
   }
 }
+
+export default enhanceWithClickOutside(Filter);

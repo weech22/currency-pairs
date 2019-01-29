@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import ActiveCurrencyPair from './ActiveCurrencyPair';
 import Filter from './Filter';
@@ -10,50 +10,42 @@ const Wrap = styled.div`
 `;
 
 const Upper = styled.div`
-  border-bottom: 1px solid #d5e0e4;
   display: flex;
+
+  align-items: center;
   padding-bottom: 14px;
-  justify-content: space-between;
+  border-bottom: 1px solid #d5e0e4;
 `;
+
 const Lower = styled.div`
   display: flex;
   justify-content: space-between;
 `;
 
-export default class extends Component {
-  state = {};
-
-  onChange = () => {};
-
-  render() {
-    const {
-      data,
-      activePair,
-      counterCurrencyList,
-      counterCurrency,
-      onCounterCurrencyClick,
-      toggleFavoriteOnly,
-      showFavoriteOnly,
-    } = this.props;
-
-    return (
-      <Wrap>
-        <Upper>
-          <ActiveCurrencyPair activePair={activePair} />
-          <Filter data={data} />
-        </Upper>
-        <Lower>
-          <Favorites
-            onClick={toggleFavoriteOnly}
-            showFavoriteOnly={showFavoriteOnly}
-          />
-          <CounterCurrencyList
-            currencies={counterCurrencyList}
-            selected={counterCurrency}
-            onClick={onCounterCurrencyClick}
-          />
-        </Lower>
-      </Wrap>
-    );
-  }
-}
+export default ({
+  activePair,
+  counterCurrencyList,
+  counterCurrency,
+  onCounterCurrencyClick,
+  toggleFavoriteOnly,
+  showFavoriteOnly,
+  onFilterResultClick,
+}) => (
+  <Wrap>
+    <Upper>
+      <ActiveCurrencyPair activePair={activePair} />
+      <Filter onResultClick={onFilterResultClick} />
+    </Upper>
+    <Lower>
+      <Favorites
+        onClick={toggleFavoriteOnly}
+        showFavoriteOnly={showFavoriteOnly}
+      />
+      <CounterCurrencyList
+        currencies={counterCurrencyList}
+        selected={counterCurrency}
+        onClick={onCounterCurrencyClick}
+      />
+    </Lower>
+  </Wrap>
+);
