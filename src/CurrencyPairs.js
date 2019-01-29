@@ -41,9 +41,8 @@ class CurrencyPairs extends Component {
   state = {
     data: [],
     activePair: {
-      // TODO: select first instead
-      baseCurrency: 'XNT',
-      counterCurrency: 'BTC',
+      baseCurrency: 'BTC',
+      counterCurrency: 'USD',
     },
     popularCounterCurrencies: [],
     showFavoriteOnly: false,
@@ -59,8 +58,9 @@ class CurrencyPairs extends Component {
     this.setState({ selectedCounterCurrency });
   };
 
-  toggleFavoriteOnly = showFavoriteOnly => {
-    this.setState({ showFavoriteOnly });
+  toggleFavoriteOnly = () => {
+    const { showFavoriteOnly } = this.state;
+    this.setState({ showFavoriteOnly: !showFavoriteOnly });
   };
 
   favoriteHandler = () => {
@@ -95,10 +95,14 @@ class CurrencyPairs extends Component {
 
   componentDidMount = () => {
     const { cookies } = this.props;
+
+    if (!cookies.get('favorite')) {
+      cookies.set('favorite', [], { path: '/' });
+    }
     const favorite = cookies.get('favorite');
     this.setState({ favorite });
-    const url = 'http://api.mrthefirst.pro/pairs-list/';
 
+    const url = 'http://api.mrthefirst.pro/pairs-list/';
     fetch(url)
       .then(response => response.json())
       .then(data => {
@@ -159,7 +163,6 @@ class CurrencyPairs extends Component {
           counterCurrency={selectedCounterCurrency}
           onCounterCurrencyClick={this.onCounterCurrencyClick}
           toggleFavoriteOnly={this.toggleFavoriteOnly}
-          showFavoriteOnly={showFavoriteOnly}
         />
         <Body>
           <CurrencyList

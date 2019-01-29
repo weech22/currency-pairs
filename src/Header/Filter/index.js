@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import enhanceWithClickOutside from 'react-click-outside';
+import fetch from 'node-fetch';
 import Dropdown from './Dropdown';
 import { Preloader } from '../../UI/styles';
 import searchIcon from '../../UI/search.png';
@@ -68,7 +69,13 @@ class Filter extends Component {
 
   onChange = e => {
     const url = 'http://api.mrthefirst.pro/pairs-list/';
-    this.setState({ isSearching: true, isDropdownShown: true });
+
+    this.setState({
+      isSearching: true,
+      isDropdownShown: true,
+      value: e.target.value,
+    });
+
     fetch(url)
       .then(response => response.json())
       .then(data => {
@@ -77,7 +84,6 @@ class Filter extends Component {
       .then(() => {
         this.setState({ isSearching: false });
       });
-    this.setState({ value: e.target.value });
   };
 
   onFocus = () => {

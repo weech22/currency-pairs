@@ -11,7 +11,6 @@ const Wrap = styled.div`
 
 const Upper = styled.div`
   display: flex;
-
   align-items: center;
   padding-bottom: 14px;
   border-bottom: 1px solid #d5e0e4;
@@ -28,7 +27,6 @@ export default ({
   counterCurrency,
   onCounterCurrencyClick,
   toggleFavoriteOnly,
-  showFavoriteOnly,
   onFilterResultClick,
 }) => (
   <Wrap>
@@ -37,10 +35,7 @@ export default ({
       <Filter onResultClick={onFilterResultClick} />
     </Upper>
     <Lower>
-      <Favorites
-        onClick={toggleFavoriteOnly}
-        showFavoriteOnly={showFavoriteOnly}
-      />
+      <Favorites onClick={toggleFavoriteOnly} />
       <CounterCurrencyList
         currencies={counterCurrencyList}
         selected={counterCurrency}

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import ScrollArea from 'react-scrollbar';
 import sadFace from '../../UI/sad_face.png';
@@ -62,62 +62,53 @@ const NoMatch = styled.div`
   justify-content: space-between;
 `;
 
-export default class extends Component {
-  state = {};
-
-  // onClick also set Filter`s value to result
-
-  render() {
-    const {
-      results,
-      term,
-      isSearching,
-      onClick,
-      focusHandler,
-      setActivePair,
-    } = this.props;
-    return (
-      <Wrap isSearching={isSearching}>
-        {isSearching && <DropdownPreloader />}
-        {results.length === 0 && term && !isSearching && (
-          <NoMatch>
-            <span>Ничего не найдено</span>
-            <img src={sadFace} alt=":(" />
-          </NoMatch>
-        )}
-        <ScrollArea
-          speed={1}
-          className="dropdown-area"
-          horizontal={false}
-          smoothScrolling
-          verticalScrollbarStyle={scrollbarStyles}
-          verticalContainerStyle={containerStyles}
-        >
-          {results &&
-            term &&
-            !isSearching &&
-            results.map(result => (
-              <ListRow
-                key={Math.random(999999)}
-                onClick={() => {
-                  onClick(result);
-                  setActivePair(result);
-                  focusHandler();
-                }}
-              >
-                <Text>
-                  {result.substring(0, result.toLowerCase().indexOf(term))}
-                </Text>
-                <Match>{term}</Match>
-                <Text>
-                  {result.substring(
-                    result.toLowerCase().indexOf(term) + term.length
-                  )}
-                </Text>
-              </ListRow>
-            ))}
-        </ScrollArea>
-      </Wrap>
-    );
-  }
-}
+export default ({
+  results,
+  term,
+  isSearching,
+  onClick,
+  focusHandler,
+  setActivePair,
+}) => (
+  <Wrap isSearching={isSearching}>
+    {isSearching && <DropdownPreloader />}
+    {results.length === 0 && term && !isSearching && (
+      <NoMatch>
+        <span>Ничего не найдено</span>
+        <img src={sadFace} alt=":(" />
+      </NoMatch>
+    )}
+    <ScrollArea
+      speed={1}
+      className="dropdown-area"
+      horizontal={false}
+      smoothScrolling
+      verticalScrollbarStyle={scrollbarStyles}
+      verticalContainerStyle={containerStyles}
+    >
+      {results &&
+        term &&
+        !isSearching &&
+        results.map(result => (
+          <ListRow
+            onClick={() => {
+              onClick(result);
+              setActivePair(result);
+              focusHandler();
+            }}
+          >
+            {/* Highlighting the green part of a result */}
+            <Text>
+              {result.substring(0, result.toLowerCase().indexOf(term))}
+            </Text>
+            <Match>{term}</Match>
+            <Text>
+              {result.substring(
+                result.toLowerCase().indexOf(term) + term.length
+              )}
+            </Text>
+          </ListRow>
+        ))}
+    </ScrollArea>
+  </Wrap>
+);

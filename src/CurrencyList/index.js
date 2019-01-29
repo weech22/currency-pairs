@@ -34,8 +34,6 @@ const HeaderRow = styled.tr`
   background-color: #e2eaed;
 `;
 
-const TBody = styled(ScrollArea)``;
-
 const isFavorite = (favorite, pairInfo) => {
   const baseCurrency = pairInfo.currency_codes[0];
   const counterCurrency = pairInfo.currency_codes[1];

@@ -18,9 +18,9 @@ const Caption = styled.span`
   }
 `;
 
-export default ({ onClick, showFavoriteOnly }) => (
+export default ({ onClick }) => (
   <Wrap>
     <Star isFavorite />
-    <Caption onClick={() => onClick(!showFavoriteOnly)}>Favorites</Caption>
+    <Caption onClick={onClick}>Favorites</Caption>
   </Wrap>
 );
